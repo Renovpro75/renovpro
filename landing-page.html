@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RenovPro — Devis & Factures pour artisans</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f5f0;
+  --dark: #0f0e0d;
+  --surface: #ffffff;
+  --accent: #d4521a;
+  --accent2: #e8722a;
+  --text: #1a1814;
+  --muted: #7a7060;
+  --border: #e0dbd0;
+  --radius: 14px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(247,245,240,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 5%;
+  height: 64px; display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; color: var(--accent); text-decoration: none; }
+.nav-logo span { color: var(--muted); font-weight: 400; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.btn-nav {
+  background: var(--dark); color: #fff; border: none;
+  border-radius: 30px; padding: 10px 22px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+  cursor: pointer; text-decoration: none; transition: all 0.2s;
+}
+.btn-nav:hover { background: var(--accent); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 100px 5% 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,82,26,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(212,82,26,0.1); border: 1px solid rgba(212,82,26,0.2);
+  border-radius: 30px; padding: 6px 16px;
+  font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(40px, 8vw, 80px);
+  line-height: 1.0; letter-spacing: -2px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero h1 em { color: var(--accent); font-style: normal; }
+.hero p {
+  font-size: clamp(14px, 2vw, 17px); color: var(--muted);
+  max-width: 560px; line-height: 1.7;
+  margin-bottom: 40px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-ctas {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.btn-primary {
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 12px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+  padding: 16px 32px; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: all 0.2s; box-shadow: 0 8px 30px rgba(212,82,26,0.3);
+}
+.btn-primary:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(212,82,26,0.4); }
+.btn-outline {
+  background: transparent; color: var(--text);
+  border: 1.5px solid var(--border); border-radius: 12px;
+  font-family: 'Syne', sans-serif; font-weight: 600; font-size: 15px;
+  padding: 16px 32px; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: var(--text); }
+
+/* MOCKUP */
+.hero-mockup {
+  margin-top: 60px; width: 100%; max-width: 380px;
+  background: #0f0e0d; border-radius: 24px;
+  border: 1px solid #333; overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.25);
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+.mockup-bar {
+  background: #1a1916; padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid #2a2824;
+}
+.mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mockup-content { padding: 16px; }
+.mockup-stat { background: #1a1916; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+.mockup-stat .ml { font-size: 9px; color: #605850; text-transform: uppercase; letter-spacing: 1px; font-family: DM Mono; }
+.mockup-stat .mv { font-family: Syne; font-weight: 800; font-size: 20px; }
+.mockup-stat .mv.g { color: #5eba7d; }
+.mockup-stat .mv.o { color: #e8a020; }
+.mockup-row { background: #1a1916; border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.mockup-ico { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.mockup-info .mn { font-family: Syne; font-weight: 600; font-size: 12px; color: #f0ece4; }
+.mockup-info .mm { font-size: 10px; color: #605850; }
+.mockup-amt { margin-left: auto; font-family: Syne; font-weight: 700; font-size: 13px; }
+
+/* SOCIAL PROOF */
+.social-proof {
+  text-align: center; padding: 20px 5%;
+  font-size: 12px; color: var(--muted);
+}
+.social-proof strong { color: var(--text); }
+.avatars { display: flex; justify-content: center; gap: -8px; margin-bottom: 10px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--bg); margin-left: -6px; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+
+/* FEATURES */
+.features { padding: 80px 5%; }
+.section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 12px; }
+.section-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(28px, 5vw, 48px); letter-spacing: -1px; margin-bottom: 16px; }
+.section-sub { font-size: 14px; color: var(--muted); max-width: 500px; line-height: 1.7; margin-bottom: 48px; }
+
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.feature-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  transition: all 0.3s;
+}
+.feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+.feature-icon { font-size: 28px; margin-bottom: 16px; }
+.feature-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 8px; }
+.feature-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+/* PRICING */
+.pricing { padding: 80px 5%; background: var(--dark); color: #f0ece4; }
+.pricing .section-title { color: #f0ece4; }
+.pricing .section-sub { color: #807860; }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 800px; }
+.plan {
+  background: #1a1916; border: 1px solid #333028;
+  border-radius: var(--radius); padding: 32px;
+}
+.plan.featured {
+  background: var(--accent); border-color: var(--accent);
+  position: relative; overflow: hidden;
+}
+.plan.featured::before {
+  content: 'POPULAIRE';
+  position: absolute; top: 16px; right: -24px;
+  background: rgba(255,255,255,0.2);
+  font-size: 9px; letter-spacing: 2px; padding: 4px 32px;
+  transform: rotate(45deg); color: #fff;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+}
+.plan-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+.plan-price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -2px; line-height: 1; }
+.plan-price span { font-size: 18px; font-weight: 400; opacity: 0.6; }
+.plan-period { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+.plan.featured .plan-period { color: rgba(255,255,255,0.7); }
+.plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.plan-features li { font-size: 13px; display: flex; align-items: center; gap: 10px; color: #c0b8a8; }
+.plan.featured .plan-features li { color: rgba(255,255,255,0.9); }
+.plan-features li::before { content: '✓'; color: #5eba7d; font-weight: 700; flex-shrink: 0; }
+.plan.featured .plan-features li::before { color: #fff; }
+.plan-cta {
+  width: 100%; padding: 14px;
+  background: #252320; border: 1px solid #333028;
+  color: #f0ece4; border-radius: 10px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+  cursor: pointer; text-decoration: none; display: block; text-align: center;
+  transition: all 0.2s;
+}
+.plan-cta:hover { background: #333028; }
+.plan.featured .plan-cta { background: rgba(255,255,255,0.2); border-color: transparent; color: #fff; }
+.plan.featured .plan-cta:hover { background: rgba(255,255,255,0.3); }
+
+/* HOW IT WORKS */
+.how { padding: 80px 5%; }
+.steps { display: flex; flex-direction: column; gap: 0; max-width: 600px; }
+.step { display: flex; gap: 24px; padding: 24px 0; position: relative; }
+.step:not(:last-child)::after { content: ''; position: absolute; left: 19px; top: 60px; bottom: 0; width: 2px; background: var(--border); }
+.step-num {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: var(--dark); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+  position: relative; z-index: 1;
+}
+.step h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+.step p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* FAQ */
+.faq { padding: 80px 5%; background: var(--surface); }
+.faq-list { max-width: 700px; display: flex; flex-direction: column; gap: 12px; }
+.faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.faq-q {
+  padding: 18px 20px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px;
+  user-select: none;
+}
+.faq-q:hover { background: var(--bg); }
+.faq-a { padding: 0 20px; max-height: 0; overflow: hidden; transition: all 0.3s; font-size: 13px; color: var(--muted); line-height: 1.7; }
+.faq-a.open { padding: 0 20px 18px; max-height: 200px; }
+.faq-arrow { transition: transform 0.3s; }
+.faq-arrow.open { transform: rotate(180deg); }
+
+/* CTA FINAL */
+.cta-final {
+  padding: 80px 5%; text-align: center;
+  background: linear-gradient(135deg, var(--accent) 0%, #b83a10 100%);
+  color: #fff;
+}
+.cta-final h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(28px, 5vw, 48px); letter-spacing: -1px; margin-bottom: 16px; }
+.cta-final p { font-size: 15px; opacity: 0.8; margin-bottom: 36px; }
+.btn-white {
+  background: #fff; color: var(--accent);
+  border: none; border-radius: 12px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+  padding: 16px 36px; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: all 0.2s; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+
+/* FOOTER */
+footer {
+  background: var(--dark); color: #504e48;
+  padding: 40px 5%;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  font-size: 12px;
+}
+footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--accent); }
+footer a { color: #504e48; text-decoration: none; }
+footer a:hover { color: #f0ece4; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .hero h1 { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Renov<span>Pro</span></a>
+  <div class="nav-links">
+    <a href="#features">Fonctionnalités</a>
+    <a href="#pricing">Tarifs</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="app.html" class="btn-nav">Commencer gratuitement →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🔨 Pour les artisans du bâtiment</div>
+  <h1>Vos devis<br>en <em>2 minutes</em>,<br>depuis le chantier.</h1>
+  <p>RenovPro est l'outil de devis et facturation conçu pour les artisans indépendants. Professionnel, rapide, sans paperasse.</p>
+  <div class="hero-ctas">
+    <a href="app.html" class="btn-primary">Essai gratuit 14 jours →</a>
+    <a href="#features" class="btn-outline">Voir les fonctionnalités</a>
+  </div>
+
+  <div class="hero-mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#ffbd2e"></div>
+      <div class="mockup-dot" style="background:#28ca41"></div>
+      <span style="font-family:DM Mono;font-size:11px;color:#504e48;margin-left:8px;">RenovPro — Tableau de bord</span>
+    </div>
+    <div class="mockup-content">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div class="mockup-stat"><div class="ml">CA ce mois</div><div class="mv g">8 400 €</div></div>
+        <div class="mockup-stat"><div class="ml">En attente</div><div class="mv o">2 150 €</div></div>
+      </div>
+      <div style="font-size:9px;color:#504e48;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Derniers documents</div>
+      <div class="mockup-row">
+        <div class="mockup-ico" style="background:rgba(232,160,32,0.15);">📋</div>
+        <div class="mockup-info"><div class="mn">M. Bernard</div><div class="mm">DEV-012 · Hier</div></div>
+        <div class="mockup-amt" style="color:#e8a020">1 840 €</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-ico" style="background:rgba(94,186,125,0.15);">🧾</div>
+        <div class="mockup-info"><div class="mn">Mme Leroy</div><div class="mm">FAC-009 · Payée</div></div>
+        <div class="mockup-amt" style="color:#5eba7d">3 200 €</div>
+      </div>
+      <div class="mockup-row">
+        <div class="mockup-ico" style="background:rgba(74,157,224,0.15);">📋</div>
+        <div class="mockup-info"><div class="mn">SCI Dupont</div><div class="mm">DEV-011 · Envoyé</div></div>
+        <div class="mockup-amt" style="color:#4a9de0">5 600 €</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="social-proof">
+  <div style="font-size:20px;margin-bottom:8px;">⭐⭐⭐⭐⭐</div>
+  <strong>+1 200 artisans</strong> utilisent déjà RenovPro en France
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-label">Fonctionnalités</div>
+  <div class="section-title">Tout ce dont vous<br>avez besoin</div>
+  <div class="section-sub">Conçu pour fonctionner depuis votre téléphone, directement sur le chantier.</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Devis en 2 minutes</h3>
+      <p>Créez des devis professionnels avec calcul automatique HT/TVA/TTC. Plus besoin de calculatrice.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧾</div>
+      <h3>Factures PDF</h3>
+      <p>Générez des factures au format PDF prêtes à envoyer au client, conformes aux normes françaises.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>100% mobile</h3>
+      <p>Conçu pour être utilisé depuis le chantier. Interface optimisée pour smartphone, hors ligne possible.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Suivi du CA</h3>
+      <p>Tableau de bord clair : chiffre d'affaires mensuel, devis en attente, factures impayées.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <h3>Synchronisation cloud</h3>
+      <p>Vos documents sauvegardés en sécurité. Accessibles depuis n'importe quel appareil à tout moment.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Calcul automatique</h3>
+      <p>Matériaux, main d'œuvre, marges — tout se calcule automatiquement. Zéro erreur de chiffrage.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-label">Comment ça marche</div>
+  <div class="section-title">Prêt en 3 étapes</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div><h3>Créez votre compte</h3><p>Inscrivez-vous en 30 secondes. Renseignez le nom de votre entreprise et votre SIRET. C'est tout.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div><h3>Créez votre premier devis</h3><p>Ajoutez les informations client, les prestations et quantités. Le total se calcule automatiquement.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div><h3>Envoyez et encaissez</h3><p>Téléchargez le PDF et envoyez-le à votre client par email ou WhatsApp directement depuis l'app.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label" style="color:#807860;">Tarifs</div>
+  <div class="section-title">Simple et transparent</div>
+  <div class="section-sub">Commencez gratuitement, passez PRO quand vous êtes prêt.</div>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Gratuit</div>
+      <div class="plan-price">0 <span>€</span></div>
+      <div class="plan-period">Pour toujours</div>
+      <ul class="plan-features">
+        <li>3 devis par mois</li>
+        <li>3 factures par mois</li>
+        <li>Export PDF</li>
+        <li>Tableau de bord</li>
+      </ul>
+      <a href="app.html" class="plan-cta">Commencer gratuitement</a>
+    </div>
+    <div class="plan featured">
+      <div class="plan-name">PRO</div>
+      <div class="plan-price">7,90 <span>€</span></div>
+      <div class="plan-period">/ mois · sans engagement</div>
+      <ul class="plan-features">
+        <li>Devis & factures illimités</li>
+        <li>Logo sur les documents</li>
+        <li>Relances automatiques</li>
+        <li>Synchronisation cloud</li>
+        <li>Support prioritaire</li>
+        <li>Accès multi-appareils</li>
+      </ul>
+      <a href="app.html" class="plan-cta">Essai gratuit 14 jours</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-label">FAQ</div>
+  <div class="section-title">Questions fréquentes</div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Est-ce que RenovPro est conforme aux normes françaises ? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Oui. Les mentions légales obligatoires (SIRET, numéro de facture, TVA) sont incluses automatiquement sur chaque document généré.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Puis-je utiliser l'app sans connexion internet ? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">La version gratuite fonctionne hors ligne en stockant les données dans votre navigateur. La version PRO synchronise tout dans le cloud, accessible depuis n'importe quel appareil.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Comment résilier l'abonnement PRO ? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Vous pouvez résilier à tout moment depuis vos paramètres de compte, sans frais ni préavis. Votre accès PRO reste actif jusqu'à la fin de la période payée.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Mes données sont-elles sécurisées ? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Oui. Vos données sont chiffrées et hébergées en Europe (Supabase EU). Nous ne partageons jamais vos informations avec des tiers.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Est-ce adapté aux auto-entrepreneurs ? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Absolument. RenovPro est conçu pour les artisans indépendants, auto-entrepreneurs et petites entreprises du bâtiment. Vous pouvez choisir le taux de TVA adapté à votre situation (0% pour les auto-entrepreneurs sous franchise).</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2>Prêt à gagner du temps<br>sur votre admin ?</h2>
+  <p>Rejoignez les artisans qui créent leurs devis en 2 minutes.</p>
+  <a href="app.html" class="btn-white">Commencer gratuitement — c'est gratuit →</a>
+</section>
+
+<footer>
+  <div class="logo">RenovPro</div>
+  <div>© 2025 RenovPro · Tous droits réservés</div>
+  <div style="display:flex;gap:20px;">
+    <a href="#">Mentions légales</a>
+    <a href="#">CGV</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  const a = el.nextElementSibling;
+  const arrow = el.querySelector('.faq-arrow');
+  a.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+</script>
+</body>
+</html>
