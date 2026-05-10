@@ -811,28 +811,30 @@ function openUpgrade() {
 function closeUpgrade() { document.getElementById('modal-upgrade').classList.remove('open'); }
 
 async function processPayment() {
-  const cardNum = document.getElementById('card-number').value.replace(/\s/g,'');
-  const exp = document.getElementById('card-exp').value;
-  const cvc = document.getElementById('card-cvc').value;
-  if (cardNum.length < 16 || exp.length < 5 || cvc.length < 3) { showNotif('Veuillez remplir tous les champs'); return; }
-
-  // Simulation du paiement Stripe
-  // En production: remplacez par un appel à votre backend qui crée une Stripe Checkout Session
-  // const res = await fetch('/api/create-subscription', { method: 'POST', body: JSON.stringify({ userId: currentUser.id }) });
-  // const { url } = await res.json();
-  // window.location.href = url;
-
-  showNotif('⏳ Traitement...');
+  showNotif('⏳ Redirection vers Stripe...');
+  if (currentUser?.id) {
+    localStorage.setItem('rp_pending_upgrade', currentUser.id);
+  }
   setTimeout(() => {
+    const email = currentUser?.email || '';
+    const baseUrl = 'https://buy.stripe.com/test_8x2cN4dmo2bcg869Et5J600';
+    const url = baseUrl + (email ? '?prefilled_email=' + encodeURIComponent(email) : '');
+    window.location.href = url;
+  }, 800);
+}
+
+async function checkStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'success') {
     userPlan = 'pro';
     if (!isDemoMode && supabase) {
-      supabase.from('profiles').upsert({ id: currentUser.id, plan: 'pro' });
+      await supabase.from('profiles').upsert({ id: currentUser.id, plan: 'pro' });
     }
-    closeUpgrade();
     showNotif('🎉 Bienvenue dans RenovPro PRO !');
     renderDashboard();
     renderSettings();
-  }, 1500);
+    window.history.replaceState({}, '', window.location.pathname);
+  }
 }
 
 function cancelSubscription() {
